@@ -7,24 +7,26 @@
 //
 
 #import "WZYUnlimitedScrollView.h"
-//没有下面两个分类的自行添加
+// 没有下面两个分类的自行添加
 #import "UIView+Frame.h"
 #import "UIImageView+WebCache.h"
 
 @interface WZYUnlimitedScrollView () <UIScrollViewDelegate>
+
 /** 外面加层UIView */
-@property (nonatomic,strong) UIView *divView;
-@property (nonatomic,strong) UIScrollView *scrollView;
-@property (nonatomic,strong) UIPageControl *pageControl;
+@property (nonatomic, strong) UIView *divView;
+@property (nonatomic, strong) UIScrollView *scrollView;
+@property (nonatomic, strong) UIPageControl *pageControl;
 /** 当前图片索引 */
-@property (nonatomic,assign) NSInteger imgIndexOf;
+@property (nonatomic, assign) NSInteger imgIndexOf;
 /** 定时器 */
-@property (nonatomic,strong) NSTimer *timer;
+@property (nonatomic, strong) NSTimer *timer;
 /** 回调block */
-@property (nonatomic,copy) void (^block)();
-@property (nonatomic,strong) UIImage *placeholderImg;
-@property (nonatomic,assign) float oldContentOffsetX;
-@property (nonatomic,assign) NSInteger imgCount;
+@property (nonatomic, copy) void (^block)();
+@property (nonatomic, strong) UIImage *placeholderImg;
+@property (nonatomic, assign) float oldContentOffsetX;
+@property (nonatomic, assign) NSInteger imgCount;
+
 @end
 
 @implementation WZYUnlimitedScrollView
@@ -47,7 +49,6 @@
     self.scrollView.frame = self.bounds;
     self.pageControl.frame = CGRectMake(0, self.height - 13, self.width, 4);
     
-    //    NSLog(@"self.pageCotrol.currentPage --- %ld", self.pageControl.currentPage);
     for (UIImageView *imgView in self.scrollView.subviews) {
         if (imgView.tag == self.pageControl.currentPage) {
             imgView.height = self.scrollView.height;
@@ -92,7 +93,9 @@
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    [self startTimer];
+    if (self.isAutoScroll) {
+        [self startTimer];
+    }
 }
 
 #pragma mark - 定时器
@@ -118,6 +121,7 @@
     for (int i = 0; i < imgArray.count; i ++) {
         UIImageView *imgView = [[UIImageView alloc] init];
         imgView.contentMode = UIViewContentModeScaleAspectFill;
+        imgView.clipsToBounds = YES;
         imgView.image = [UIImage imageNamed:imgArray[i]];
         imgView.tag = i;
         imgView.frame = CGRectMake(i * self.width, 0, self.width, self.height);
@@ -126,7 +130,9 @@
     self.scrollView.contentSize = CGSizeMake(self.width * imgArray.count, 0);
     self.pageControl.numberOfPages = imgArray.count - 1;
     [self addImgClick];
-    [self startTimer];
+    if (self.isAutoScroll) {
+        [self startTimer];
+    }
 }
 
 - (void)setImgUrlArray:(NSArray *)imgUrlArray {
@@ -136,6 +142,7 @@
     for (int i = 0; i < imgUrlArray.count; i ++) {
         UIImageView *imgView = [[UIImageView alloc] init];
         imgView.contentMode = UIViewContentModeScaleAspectFill;
+        imgView.clipsToBounds = YES;
         imgView.tag = i;
         NSURL *imgUrl = [NSURL URLWithString:imgUrlArray[i]];
         [imgView sd_setImageWithURL:imgUrl placeholderImage:self.placeholderImg completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
@@ -147,7 +154,9 @@
     self.scrollView.contentSize = CGSizeMake(self.width * imgUrlArray.count, 0);
     self.pageControl.numberOfPages = imgUrlArray.count - 1;
     [self addImgClick];
-    [self startTimer];
+    if (self.isAutoScroll) {
+        [self startTimer];
+    }
 }
 
 #pragma mark - 图片点击

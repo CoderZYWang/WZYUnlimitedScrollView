@@ -16,15 +16,21 @@
 
 @end
 
+static NSString *testCellId = @"testCellId";
+
 @implementation ViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    self.title = @"WZYUnlimitedScrollView";
+    
     UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 100, SCREENWIDTH, 100) style:UITableViewStylePlain];
     tableView.bounces = NO;
     tableView.delegate = self;
     tableView.dataSource = self;
+    [tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:testCellId];
     [self.view addSubview:tableView];
     
 }
@@ -42,11 +48,11 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"test"];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:testCellId];
     if (indexPath.row == 0) {
-        cell.textLabel.text = @"普通效果演示";
+        cell.textLabel.text = @"普通无限轮播效果演示";
     } else {
-        cell.textLabel.text = @"带有下拉拉伸效果演示";
+        cell.textLabel.text = @"带有下拉拉伸无限轮播效果演示";
     }
     return cell;
 }

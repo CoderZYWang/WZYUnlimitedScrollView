@@ -27,9 +27,18 @@
 @property (nonatomic, strong) NSArray *imgArray;
 /** 网络图片数组*/
 @property (nonatomic, strong) NSArray *imgUrlArray;
+/** 是否自动轮播滚动（默认为不自动轮播） */
+@property (nonatomic, assign) BOOL isAutoScroll;
 /** 图片点击调用*/
 - (void)touchImageIndexBlock:(void (^)(NSInteger index, NSString *imgUrl))block;
 
 - (instancetype)initWithFrame:(CGRect)frame placeholderImg:(UIImage *)img;
 
 @end
+
+/**
+ 使用说明：
+ 01 按照 FirExampleViewController.m 和 SecExampleViewController.m 的集成方法进行集成。集成步骤很简单，不做描述。
+ 02 集成依赖 UIView+Frame 和 SDWebImage
+ 03 
+ */

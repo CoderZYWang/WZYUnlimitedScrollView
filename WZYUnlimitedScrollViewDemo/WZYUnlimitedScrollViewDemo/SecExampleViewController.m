@@ -26,9 +26,10 @@ static NSString *testCellId = @"testCellId";
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor whiteColor];
+    self.automaticallyAdjustsScrollViewInsets = NO;
 
+    // 添加一个与banner连接的tableView
     UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
-    tableView.backgroundColor = [UIColor orangeColor];
     tableView.delegate = self;
     tableView.dataSource = self;
     [tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:testCellId];
@@ -36,6 +37,7 @@ static NSString *testCellId = @"testCellId";
     tableView.contentInset = UIEdgeInsetsMake(SCREENWIDTH * 150 / 375 + 64, 0, 0, 0);
     [self.view addSubview:tableView];
     
+    // 添加banner。用法和前面的基本集成一样
     WZYUnlimitedScrollView *banner = [[WZYUnlimitedScrollView alloc] initWithFrame:CGRectMake(0, 64, SCREENWIDTH, SCREENWIDTH * 150 / 375) placeholderImg:[UIImage imageNamed:@"ggsc_default_pic"]];
     self.banner = banner;
     banner.unlimitedScrollDelegate = self;
@@ -46,7 +48,9 @@ static NSString *testCellId = @"testCellId";
     [imgArrM addObject:@"ggsc_banner_3"];
     banner.imgArray = imgArrM;
     [banner touchImageIndexBlock:^(NSInteger index, NSString *imgUrl) {
-        NSLog(@"index --- %ld, imgUrl --- %@", index, imgUrl);
+//        NSLog(@"index --- %ld, imgUrl --- %@", index, imgUrl);
+        UIAlertView *infoView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"index --- %ld", index] message:[NSString stringWithFormat:@"图片名称&跳转Url --- %@", imgUrl] delegate:self cancelButtonTitle:@"返回" otherButtonTitles:nil , nil];
+        [infoView show];
     }];
     [self.view addSubview:banner];
 }
@@ -54,19 +58,18 @@ static NSString *testCellId = @"testCellId";
 #pragma mark - Scroll View delegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGFloat bannerHeightChange = - scrollView.contentOffset.y - SCREENWIDTH * 150 / 375 - 64;
-        NSLog(@"----- %.2f", bannerHeightChange); // 该值为banner图的变化量
-    if (bannerHeightChange <= 1) { // 因为有一个 0.08 的误差，所以这里在1的范围内可以滚动
+
+    if (bannerHeightChange <= 1) {
         self.banner.y = bannerHeightChange + 64;
         self.banner.height = SCREENWIDTH * 150 / 375;
         self.banner.userInteractionEnabled = YES;
     } else {
-        self.banner.y = 64;
-        self.banner.frame = CGRectMake(0, 0, SCREENWIDTH, SCREENWIDTH * 150 / 375 + bannerHeightChange);
+        self.banner.frame = CGRectMake(0, 64, SCREENWIDTH, SCREENWIDTH * 150 / 375 + bannerHeightChange);
         self.banner.userInteractionEnabled = NO;
     }
 }
 
-#pragma mark Banner Scroll Delegate
+#pragma mark - WZYUnlimitedScrollViewDelegate
 - (void)scrollDidScrollisOutsideScroll:(BOOL)isOutsideScroll {
     if (isOutsideScroll) {
         self.tableView.scrollEnabled = YES;
@@ -75,16 +78,18 @@ static NSString *testCellId = @"testCellId";
     }
 }
 
+#pragma mark - Table View Delegate
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 60;
+}
+
+#pragma mark - Table View Data Source
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return 20;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 60;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
