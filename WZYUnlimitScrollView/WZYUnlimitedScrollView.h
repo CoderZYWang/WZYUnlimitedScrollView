@@ -40,5 +40,5 @@
  使用说明：
  01 按照 FirExampleViewController.m 和 SecExampleViewController.m 的集成方法进行集成。集成步骤很简单，不做描述。
  02 集成依赖 UIView+Frame 和 SDWebImage
- 03 传入isAutoScroll YES == 自动滚动, NO == 不自动滚动
+ 03 
  */

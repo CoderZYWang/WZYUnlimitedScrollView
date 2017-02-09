@@ -32,6 +32,7 @@ static NSString *testCellId = @"testCellId";
     UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     tableView.delegate = self;
     tableView.dataSource = self;
+    tableView.showsVerticalScrollIndicator = NO;
     [tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:testCellId];
     self.tableView = tableView;
     tableView.contentInset = UIEdgeInsetsMake(SCREENWIDTH * 150 / 375 + 64, 0, 0, 0);
@@ -40,6 +41,7 @@ static NSString *testCellId = @"testCellId";
     // 添加banner。用法和前面的基本集成一样
     WZYUnlimitedScrollView *banner = [[WZYUnlimitedScrollView alloc] initWithFrame:CGRectMake(0, 64, SCREENWIDTH, SCREENWIDTH * 150 / 375) placeholderImg:[UIImage imageNamed:@"ggsc_default_pic"]];
     self.banner = banner;
+    banner.isAutoScroll = YES; // 自动轮播
     banner.unlimitedScrollDelegate = self;
     banner.backgroundColor = [UIColor blueColor];
     NSMutableArray *imgArrM = [NSMutableArray array];
