@@ -8,8 +8,8 @@
 
 #import "WZYUnlimitedScrollView.h"
 // 没有下面两个分类的自行添加
-//#import "UIView+Frame.h"
-//#import "UIImageView+WebCache.h"
+#import "UIView+Frame.h"
+#import "UIImageView+WebCache.h"
 
 @interface WZYUnlimitedScrollView () <UIScrollViewDelegate>
 
