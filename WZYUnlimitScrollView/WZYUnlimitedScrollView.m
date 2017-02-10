@@ -9,7 +9,7 @@
 #import "WZYUnlimitedScrollView.h"
 // 没有下面两个分类的自行添加
 #import "UIView+Frame.h"
-#import "UIImageView+WebCache.h"
+//#import "UIImageView+WebCache.h"
 
 @interface WZYUnlimitedScrollView () <UIScrollViewDelegate>
 
@@ -145,9 +145,11 @@
         imgView.clipsToBounds = YES;
         imgView.tag = i;
         NSURL *imgUrl = [NSURL URLWithString:imgUrlArray[i]];
-        [imgView sd_setImageWithURL:imgUrl placeholderImage:self.placeholderImg completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-            //NSLog(@"====================\n%@\n%@\n=====================",imgUrl,error);
-        }];
+        
+        // 使用时请打开
+//        [imgView sd_setImageWithURL:imgUrl placeholderImage:self.placeholderImg completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+//            //NSLog(@"====================\n%@\n%@\n=====================",imgUrl,error);
+//        }];
         imgView.frame = CGRectMake(i * self.width, 0, self.width, self.height);
         [self.scrollView addSubview:imgView];
     }
